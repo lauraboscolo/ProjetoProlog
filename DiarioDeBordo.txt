@@ -1,2 +1,6 @@
 [06/10/2014]
 Fizemos as cláusulas para verificar se o aluno concluiu certa matéria. Para isso, tivemos que criar métodos auxiliares como terminouMateria(que verifica apenas se a nota é maior que 5 e se a frequência é maior que 75%), materiaConcluida(que verifica se o usuário terminou a matéria passada por parametro - esse método utiliza o método auxiliar "terminouMateria") e concluiuHistorico(método que foi utilizado para unir o RA às matérias que ele concluiu ou não).
+
+[07/10/2014]
+Começamos a corrigir os erros nas cláusulas feitos no dia anterior.
+As cláusulas materiaConcluida e teminouMateria estavam certos. Os metodos materiaConcluida e concluiuHistorico tiveram que ser modificados, para facilitar o desenvolvimento.
