@@ -29,12 +29,13 @@ aluno(12090,ana).
 % cursa(ra,cc)
 cursa(12909,1).
 cursa(12080,2).
+cursa(12090,2).
 
 %item(cm,sm,an,nt,fq).
 historico(12808,[item(1,1,2012,3.0,0.77),item(1,2,2013,6.5,0.90),item(5,1,2014,8.0,0.80)]).
 historico(12909,[item(1,1,2012,4.0,0.80),item(2,2,2013,8.5,0.80),item(3,1,2014,5.0,0.75)]).
 historico(12080,[item(5,1,2012,6.0,0.70),item(5,2,2013,7.5,0.90),item(6,1,2014,5.0,0.90)]).
-historico(12090,[item(7,1,2012,6.0,0.75),item(8,2,2014,8.0,0.89)]).
+historico(12090,[item(7,1,2012,3.0,0.75),item(8,2,2014,8.0,0.89)]).
 
 %Exercicio2
 % falta(12909,OQUE).
@@ -43,6 +44,11 @@ historico(12090,[item(7,1,2012,6.0,0.75),item(8,2,2014,8.0,0.89)]).
 %Inserir um elemento numa lista.
 insereLista(X,[],[X]).
 insereLista(X,[L|R],[X,L|R]).
+
+%Inserir Unico elemento
+insereUnico(X,[],[X]).
+insereUnico(X,[L|R],[L|R]):-existe(X,[L|R]).
+insereUnico(X,[L|R],[X,L|R]):-not(existe(X,[L|R])).
 
 %Existe elemento na lista
 existe(X,[X|_]).
@@ -56,6 +62,10 @@ removerLista(X,[L|R],[L|NL]):-X\==L,removerLista(X,R,NL).
 concluiuItem(item(_,_,_,NM,FQ)):-NM@>=5.0,FQ@>=0.75.
 naoConcluiuItem(item(_,_,_,NM,FQ)):-NM@<5.0,FQ@<0.75.
 
+% Pegar códigos(ITENS,LISTADECODIGOS)
+pegarCodigos([],[]).
+pegarCodigos([item(CM,_,_,_,_)|R],[CM|Q]):-pegarCodigos(R,Q).
+
 %2
 falta(RA,CC,LM):-historico(RA,H),curriculo(CC,M),retirar(M,H,LM).
 
@@ -65,12 +75,11 @@ retirar([X|R],[],[X|R]).
 retirar([L|S],[item(COD,_,_,N,F)|R],LISTA):-retirar([L|S],R,NL),existe(COD,[L|S]),concluiuItem(item(COD,_,_,N,F)),removerLista(COD,NL,LISTA).
 retirar([L|S],[item(COD,_,_,_,_)|R],NL):-not(existe(COD,[L|S])),retirar([L|S],R,NL).
 
-%2 FALTA EXTRA
-%2
-extra(RA,CC,LM):-historico(RA,H),curriculo(CC,M),retirarExtra(M,H,LM).
+%3 FALTA EXTRA
+extra(RA,CC,LM):-historico(RA,H),curriculo(CC,M),pegarCodigos(H,HIST),extraAux(M,HIST,LM).
 
-%Retirar 2ª da 1ª
-retirarExtra([],[],[]).
-retirarExtra([X|R],[],[X|R]).
-retirarExtra([L|S],[item(COD,_,_,N,F)|R],LISTA):-retirarExtra([L|S],R,NL),existe(COD,[L|S]),insereLista(COD,NL,LISTA).
-retirarExtra([L|S],[item(COD,_,_,_,_)|R],NL):-not(existe(COD,[L|S])),retirarExtra([L|S],R,NL).
+%extraAux(CURRICULO,HISTORICO)
+extraAux([],[],[]).
+extraAux([_|_],[],[]).
+extraAux([L|S],[X|R],LISTA):-extraAux([L|S],R,NL),not(existe(X,[L|S])),insereUnico(X,NL,LISTA).
+extraAux([L|S],[X|R],NL):-existe(X,[L|S]),extraAux([L|S],R,NL).
