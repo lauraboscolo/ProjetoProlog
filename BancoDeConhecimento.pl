@@ -18,7 +18,7 @@ materia(8,microcontroladores,4).
 
 %curriculo(cc,[cm1,cm2,...,cmn]).
 curriculo(1,[1,2,3,4]).
-curriculo(2,[5,6,7,8]).
+curriculo(2,[7,8]).
 
 % aluno(ra,na).
 aluno(12808,jose).
@@ -33,9 +33,9 @@ cursa(12090,2).
 
 %item(cm,sm,an,nt,fq).
 historico(12808,[item(1,1,2012,3.0,0.77),item(1,2,2013,6.5,0.60),item(5,1,2014,8.0,0.80)]).
-historico(12909,[item(1,1,2012,4.0,0.80),item(2,2,2013,8.5,0.80),item(3,1,2014,5.0,0.75)]).
+historico(12909,[item(1,1,2012,6.0,0.80),item(2,2,2013,8.5,0.80),item(3,1,2014,5.0,0.75)]).
 historico(12080,[item(5,1,2012,6.0,0.70),item(5,2,2013,7.5,0.90),item(6,1,2014,5.0,0.90)]).
-historico(12090,[item(7,1,2012,3.0,0.75),item(8,2,2014,8.0,0.89)]).
+historico(12090,[item(7,1,2012,8.0,0.75),item(8,2,2014,8.0,0.89)]).
 
 %Exercicio2
 % falta(12909,OQUE).
@@ -66,10 +66,17 @@ naoConcluiuItem(item(_,_,_,NM,FQ)):-NM@<5.0,FQ@<0.75.
 pegarCodigos([],[]).
 pegarCodigos([item(CM,_,_,_,_)|R],[CM|Q]):-pegarCodigos(R,Q).
 
-%2
-falta(RA,CC,LM):-historico(RA,H),curriculo(CC,M),retirar(M,H,LM).
+%Trasnformar para nome
+transformar([],[]).
+transformar([L|R],NL):-transformar(R,RESP),materia(L,NOME,_),insereLista(NOME,RESP,NL).
 
-%Retirar 2ª da 1ª
+%Exercicio1
+concluiu(RA,CC):-historico(RA,H),curriculo(CC,M),retirar(M,H,LM),qtos(LM,QTOS),QTOS==0.
+
+%2
+falta(RA,CC,NM):-historico(RA,H),curriculo(CC,M),retirar(M,H,LM),transformar(LM,NM).
+
+%Retirar 2ª da 1ª Retorna os elementos que faltam para concluir o curso
 retirar([],[],[]).
 retirar([X|R],[],[X|R]).
 retirar([L|S],[item(COD,_,_,_,_)|R],NL):-not(existe(COD,[L|S])),retirar([L|S],R,NL).
@@ -78,10 +85,19 @@ retirar([L|S],[item(COD,_,_,N,F)|R],LISTA):-existe(COD,[L|S]),concluiuItem(item(
 
 
 %3 FALTA EXTRA
-extra(RA,CC,LM):-historico(RA,H),curriculo(CC,M),pegarCodigos(H,HIST),extraAux(M,HIST,LM).
+extra(RA,CC,RESP):-historico(RA,H),curriculo(CC,M),pegarCodigos(H,HIST),extraAux(M,HIST,LM),transformar(LM,RESP).
 
 %extraAux(CURRICULO,HISTORICO)
 extraAux([],[],[]).
 extraAux([_|_],[],[]).
 extraAux([L|S],[X|R],LISTA):-extraAux([L|S],R,NL),not(existe(X,[L|S])),insereUnico(X,NL,LISTA).
 extraAux([L|S],[X|R],NL):-existe(X,[L|S]),extraAux([L|S],R,NL).
+
+%Exercicio4 PORCENTAGEM DO CURSO
+
+jafoi(RA,CC,PO):-historico(RA,H),curriculo(CC,M),retirar(M,H,LM),qtos(M,QC),qtos(LM,QFF),PO is (QFF*100/QC).
+
+
+%contarElementosDaLista
+qtos([],0).
+qtos([_|R],Q):-qtos(R,C),Q is C+1.
