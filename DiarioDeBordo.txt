@@ -3,4 +3,5 @@ Fizemos as cláusulas para verificar se o aluno concluiu certa matéria. Para isso
 
 [07/10/2014]
 Começamos a corrigir os erros nas cláusulas feitos no dia anterior.
-As cláusulas materiaConcluida e teminouMateria estavam certos. Os metodos materiaConcluida e concluiuHistorico tiveram que ser modificados, para facilitar o desenvolvimento.
+As cláusulas materiaConcluida e teminouMateria estavam certos. As cláusulas materiaConcluida e concluiuHistorico tiveram que ser modificados, para facilitar o desenvolvimento.
+Todos os erros estão corrigidos e, agora, o exercício 1 e 2 estão prontos.
